@@ -1,0 +1,203 @@
+% 学术注释系统模块（中文古籍版）
+% 功能：提供中文古籍研究所需的完整注释体系，支持多层级学术标注
+% 设计理念：分层注释、语义化标注、符合古籍研究规范
+\ProvidesFile{academic-notes.sty}[2025/10/30 Academic Notes System]
+
+% ==================== 文献标识命令系统 ====================
+% 提供语义化的文献类型标识，便于区分不同层次的古籍文献
+
+% 经部元典标识
+\NewDocumentCommand\jing{s o m}{%
+  \IfBooleanTF{#1}{%
+    % 有星号模式：只打印标记
+    \textbf{\songti 经}%
+  }{%
+    % 无星号模式
+    \IfNoValueTF{#2}{%
+      % 没有可选参数
+      \textbf{\songti 经：}\yuandian{#3}%
+    }{%
+      % 有可选参数
+      \textbf{\songti 经}\textcolor{gray}{\scriptsize #2}：\yuandian{#3}%
+    }%
+  }%
+}
+
+% 注标识
+\NewDocumentCommand\zhu{s o m}{%
+  \IfBooleanTF{#1}{%
+    % 有星号模式：只打印标记
+    \textbf{\songti 注}%
+  }{%
+    % 无星号模式
+    \IfNoValueTF{#2}{%
+      % 没有可选参数
+      \textbf{\songti 注：}〈#3〉%
+    }{%
+      % 有可选参数
+      \textbf{\songti 注}\textcolor{gray}{\scriptsize #2}：〈#3〉%
+    }%
+  }%
+}
+
+% 疏标识
+\NewDocumentCommand\shu{s o m}{%
+  \IfBooleanTF{#1}{%
+    % 有星号模式：只打印标记
+    \textbf{\songti 疏}%
+  }{%
+    % 无星号模式
+    \IfNoValueTF{#2}{%
+      % 没有可选参数
+      \textbf{\songti 疏：}〔#3〕%
+    }{%
+      % 有可选参数
+      \textbf{\songti 疏}\textcolor{gray}{\scriptsize #2}：〔#3〕%
+    }%
+  }%
+}
+
+% 音義训诂标识
+\NewDocumentCommand\xungu{s o m}{%
+  \IfBooleanTF{#1}{%
+    % 有星号模式：只打印标记
+    \textbf{\songti 训}%
+  }{%
+    % 无星号模式
+    \IfNoValueTF{#2}{%
+      % 没有可选参数
+      \textbf{\songti 训：}［#3］%
+    }{%
+      % 有可选参数
+      \textbf{\songti 训}\textcolor{gray}{\scriptsize #2}：［#3］%
+    }%
+  }%
+}
+
+% 辅助命令
+\newcommand{\yuandian}[1]{\textbf{\songti #1}} % 元典文字格式：粗体宋体
+\newcommand{\lz}{\colorbox[gray]{0.85}{\textbf{\songti 连缀}}\space} % 连缀图标
+\newcommand{\lianzhui}[1]{\footnote{\kaishu{\lz #1}}} % 连缀注释
+\newcommand{\shujie}{\colorbox[gray]{0.85}{\textbf{\songti 疏解}}\space} % 疏解图标
+\newcommand{\kaozheng}{\colorbox[gray]{0.85}{\textbf{\songti 考证}}\space} % 考证图标
+
+% ==================== 注音系统 ====================
+\usepackage{xpinyin} % 拼音宏包
+
+% 注音命令
+\NewDocumentCommand{\zhuyin}{m}{%
+    {\textcolor{blue}{\xpinyin*{#1}}}%
+}
+
+% ==================== 夹注系统 ====================
+
+\usepackage{xfp}  % 现代LaTeX浮点计算工具，用于精确控制字号缩放
+
+% 动态字号夹注：自动调整为主字号的60%
+\NewDocumentCommand\jiazhu{O{4} m}{%
+    \nobreak\hspace{0pt}%
+    % 使用 xfp 计算60%的字号
+    {\fontsize{\fpeval{0.6*\f@size}pt}{\fpeval{0.72*\f@size}pt}\selectfont\kaishu%
+    \IfStrEqCase{#1}{%
+        {1}{\textcolor{red}{〈\,#2\,〉}}%   % 注
+        {2}{\textcolor{blue}{〔\,#2\,〕}}%  % 疏
+        {3}{\textcolor{brown}{〖\,#2\,〗}}% % 训诂
+        {4}{\textcolor{orange}{【\,#2\,】}}% % 编注
+    }[\textcolor{orange}{【\,#2\,】}]}%     % 默认
+    \allowbreak%
+}
+
+% ==================== 尾注系统 ====================
+% 章末详细注释系统（疏证）
+\newlist{postnotelist}{enumerate}{1}
+\setlist[postnotelist,1]{%
+    labelwidth = 2em,
+    itemindent = 0pt,
+    labelindent = 0pt,
+    labelsep = 0pt,
+    leftmargin = !,
+    align = left
+}
+
+% 尾注格式详细设置
+\postnotesetup{%
+    listenv = postnotelist,
+    postprintnote = （第\pnthepage 页）,
+    maketextmark = {#2\textbf{#1}~#3}
+}
+
+% 尾注页眉格式设置
+\postnotesetup{
+    heading = {%
+        \section*{\pntitle}
+        \markboth{\mypnheaderleft}{\mypnheaderright}%
+    }, 
+}
+
+% 左页页眉内容
+\NewDocumentCommand \mypnheaderleft {}
+{\arabic{chapter}\quad \Chaptername}
+
+% 右页页眉内容
+\ExplSyntaxOn
+\NewDocumentCommand \mypnheaderright {}
+{\tl_if_eq:NNTF \pnhdpagefirst \pnhdpagelast
+    {疏证}
+    {疏证}
+}
+\ExplSyntaxOff
+
+% 尾注编号设置
+\counterwithin*{postnote}{chapter}
+\renewcommand{\@makefnmark}{\makebox{\normalfont(\@thefnmark)\space}}
+\renewcommand\thepostnote{〔\chinese{postnote}〕}
+\renewcommand*{\pntitle}{疏证\addcontentsline{toc}{section}{疏证}}
+
+% 尾注疏证
+\newcommand{\shuzheng}[1]{\postnote{\footnotesize #1}}
+
+% 疏表命令
+\newcommand{\shubiao}{%
+    \newpage
+    \printpostnotes
+    \newpage
+    \section*{义表}
+    \markboth{\arabic{chapter}\quad\Chaptername}{义表}
+    \addcontentsline{toc}{section}{义表}
+}
+
+% ==================== 脚注和边注系统 ====================
+\makeatletter
+\renewcommand{\@makefnmark}{\textsuperscript{\makebox{\normalfont[\,\@thefnmark\,]}}}
+\renewcommand\thefootnote{\arabic{footnote}}
+\newcommand{\jiaozhu}[1]{\footnote{\kaishu{#1}}}
+\newcommand{\bianzhu}[1]{\marginnote{[#1]}}
+
+% ==================== 文献引用管理系统 ====================
+\DeclareDocumentCommand{\citeref}{s m}{%
+  \IfBooleanTF{#1}{%
+    {\citefield{#2}{title}}%
+  }{%
+    《\cite{#2}》%
+  }%
+}
+
+\DeclareCiteCommand{\cite}[\mkbibemph]
+  {\usebibmacro{prenote}}
+  {\ifciteindex
+     {\indexfield{indextitle}}
+     {}%
+   \printtext[bibhyperref]{%
+     \iffieldundef{shorthand}
+       {\printfield[citetitle]{labeltitle}}
+       {\printfield{shorthand}}}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\DeclareDocumentCommand\citezh{m o}{%
+  \IfNoValueTF{#2}%
+    {《{\songti\citetitle{#1}}》}%
+    {《{\songti\citetitle{#1}}》，{\kaishu{第{#2}页}}。}%
+}
+
+\endinput

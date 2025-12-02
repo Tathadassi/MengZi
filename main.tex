@@ -1,0 +1,46 @@
+\documentclass[12pt, fontset=windows]{ctexbook}
+\usepackage[14pt]{extsizes}  % 设置14磅字号
+
+% 排版设置
+\input{settings/packages}
+\input{settings/styles}
+
+\begin{document}
+
+% 標題頁
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\Huge\bfseries\songti 孟\quad 子}\\[1cm]
+  {\Large\kaishu 〖漢〗趙岐\quad 注}\\[2cm]
+  \vfill
+\begin{tabular}{@{}r@{\hspace{0.5em}}l@{}}
+版本標識： & \href{https://github.com/kanripo/KR1h0002}{KR1h0002} \\
+底本來源： & SBCK \\
+卷數： & 14 \\
+日期： & 2015.09.10 \\
+\end{tabular}\\[1cm]
+\end{titlepage}
+
+% 目录设置
+\setupdirectories
+
+% 正文開始
+\include{00}
+\include{01}
+\include{02}
+\include{03}
+\include{04}
+\include{05}
+\include{06}
+\include{07}
+\include{08}
+\include{09}
+\include{10}
+\include{11}
+\include{12}
+\include{13}
+\include{14}
+\include{000}
+
+\end{document}

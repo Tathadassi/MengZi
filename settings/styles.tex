@@ -1,0 +1,164 @@
+% 样式设置
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 页面布局与版式设置
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 页面布局设置 - 采用16开书籍标准尺寸
+\RequirePackage{geometry}
+\geometry{
+    paperheight=260mm, 
+    paperwidth=185mm, % 页面尺寸：260mm × 185mm（16开）
+    top=3cm, 
+    bottom=3cm, % 上下边距：3厘米
+    outer=3cm, 
+    inner=3cm, % 内外边距：3厘米（对称布局）
+    heightrounded, 
+    marginparsep=1cm % 高度圆整和旁注间隔1厘米
+}
+
+% 页眉页脚设置
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} % 清除默认页眉页脚
+\fancyhead[CE]{\leftmark} % 偶数页居中：章节名
+\fancyhead[CO]{\rightmark} % 奇数页居中：节名
+\fancyfoot[CE,CO]{\thepage} % 页脚居中：页码
+
+\setlength{\headheight}{15pt}
+
+% 空白页处理：章节开始的空白页无页眉页脚
+\RequirePackage{emptypage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 目录格式设置
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 目录系统设置命令
+\newcommand{\setupdirectories}{%
+  % 简目设置（仅显示章级别）
+  \setcounter{tocdepth}{0} 
+  \renewcommand{\contentsname}{卷名简目}
+  \tableofcontents % 打印简目目录
+  
+  % 细目设置（显示详细目录结构）  
+  \renewcommand{\contentsname}{本卷细目}
+}
+
+% 目录标题格式
+\renewcommand{\cfttoctitlefont}{\hfill\huge\bfseries\songti} % 目录标题字体：居中、超大、粗体、宋体
+\renewcommand{\cftaftertoctitle}{\hfill} % 目录标题后间距：确保标题居中
+
+% 目录条目格式
+\renewcommand{\cftchapfont}{\bfseries\songti} % 章节目录项粗体
+\renewcommand{\cftsecfont}{\normalfont} % 节目录项正常字体
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 章节标题格式
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 使用ctexset配置中文文档的章节格式
+\ctexset{
+    % 品（Part）级别格式设置
+    part={
+        name={第,品}, % 名称格式：第X品（如"第一品"）
+        number=\Roman{part}, % 使用大写罗马数字编号（I, II, III...）
+        format={\huge\bfseries\centering\songti}, % 格式：超大号粗体宋体居中
+        nameformat={\normalsize\mdseries}, % "第"和"品"的格式
+        numberformat={\normalsize\mdseries}, % 编号格式
+    },
+    % 章（Chapter）级别格式设置  
+    chapter={
+        name={卷第}, % 不显示"章"字，仅显示数字
+        number=\chinese{chapter}, % 使用阿拉伯数字编号（1, 2, 3...）
+        format={\huge\bfseries\centering\songti}, % 格式：超大号粗体宋体居中
+    },
+    % 节（Section）级别格式设置
+    section={
+        name={\arabic{chapter}.,}, % 名称格式：章号.节号（如"1.1"）
+        number=\arabic{section}, % 使用阿拉伯数字编号
+        format={\Large\bfseries\centering\songti}, % 格式：大号粗体宋体居中
+    },
+    % 小节（Subsection）级别格式设置
+    subsection={
+        name={\arabic{chapter}.\arabic{section}.,}, % 名称格式：章号.节号.小节号（如"1.1.1"）
+        number=\arabic{subsection}, % 使用阿拉伯数字编号
+        format={\large\bfseries\songti}, % 格式：较大号粗体宋体（左对齐）
+    },
+    % 小小节（Subsubsection）级别格式设置
+    subsubsection={
+        format={\large\bfseries\songti}, % 格式：较大号粗体宋体
+    },
+    % 段落（Paragraph）级别格式设置
+    paragraph={
+        format={\normalsize\bfseries\songti}, % 格式：正常大小粗体宋体
+    },
+    % 小段落（Subparagraph）级别格式设置
+    subparagraph={
+        format={\normalsize\bfseries\songti}, % 格式：正常大小粗体宋体
+    },
+}
+
+% 结束语环境：用于章节结束语的专用格式
+\newenvironment{jieshu}
+{\begin{center}\mdseries\large\em}
+{\end{center}}
+
+% 超链接设置
+\RequirePackage{hyperref} % 加载超链接宏包，支持PDF书签和交叉引用链接
+\hypersetup{
+    % 基础功能
+    colorlinks=true,        % 彩色链接
+    linktocpage=true,       % 目录链接指向页码
+    plainpages=false,       % 混合页码支持
+    breaklinks=true,        % 允许链接换行
+    % 链接颜色
+    urlcolor=darkgray,      % 网址链接
+    citecolor=blue,         % 引用链接  
+    linkcolor=darkgray,     % 内部链接
+    filecolor=teal          % 文件链接
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PDF元数据与超链接设置
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% PDF文档属性和超链接样式配置
+\hypersetup{%
+    bookmarksopen=true, % 在PDF阅读器中默认展开书签
+    bookmarksnumbered=true, % 书签显示章节编号
+    bookmarksopenlevel=1, % 默认展开到一级标题
+    unicode=true, % 启用Unicode支持，确保特殊字符正确显示
+    % 链接样式设置
+    breaklinks=true, % 允许链接文本自动换行
+    colorlinks=true, % 使用彩色链接而非边框
+    citecolor=black, % 文献引用链接颜色：黑色
+    linkcolor=red, % 内部交叉引用链接颜色：红色
+    % PDF文档元数据设置
+    pdftitle={孟子趙氏注}, % 文档标题
+    pdfauthor={逸竹山人}, % 作者信息
+    pdfkeywords={古典文獻,儒家,古注}, % 搜索关键词
+    pdfstartview=Fit, % 初始视图模式：适应页面
+    pdfsubject={古典文獻}, % 文档主题分类
+}%
+
+% ==================== 文档开始命令 ====================
+
+% 文档开始命令：生成目录并控制目录层次
+% 参数说明：
+% 无星号：只显示主要目录
+% 有星号：显示详细目录
+\NewDocumentCommand{\kaishi}{s}{%
+    \IfBooleanTF{#1}
+    {%
+        % 有星号：显示详细目录
+        \etocsetnexttocdepth{3}%
+        \localtableofcontents
+    }
+    {%
+        % 无星号：只显示主要目录
+        \etocsetnexttocdepth{1}%
+        \localtableofcontents
+    }%
+    \newpage\thispagestyle{plain}%
+}
