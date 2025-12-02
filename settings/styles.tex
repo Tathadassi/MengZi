@@ -99,10 +99,9 @@
     },
 }
 
-% 结束语环境：用于章节结束语的专用格式
-\newenvironment{jieshu}
-{\begin{center}\mdseries\large\em}
-{\end{center}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PDF元数据与超链接设置
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 超链接设置
 \RequirePackage{hyperref} % 加载超链接宏包，支持PDF书签和交叉引用链接
@@ -119,10 +118,6 @@
     filecolor=teal          % 文件链接
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PDF元数据与超链接设置
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % PDF文档属性和超链接样式配置
 \hypersetup{%
     bookmarksopen=true, % 在PDF阅读器中默认展开书签
@@ -137,7 +132,7 @@
     % PDF文档元数据设置
     pdftitle={孟子趙氏注}, % 文档标题
     pdfauthor={逸竹山人}, % 作者信息
-    pdfkeywords={古典文獻,儒家,古注}, % 搜索关键词
+    pdfkeywords={孟子,趙岐,古注}, % 搜索关键词
     pdfstartview=Fit, % 初始视图模式：适应页面
     pdfsubject={古典文獻}, % 文档主题分类
 }%
@@ -162,3 +157,9 @@
     }%
     \newpage\thispagestyle{plain}%
 }
+
+% 结束语环境：用于章节结束语的专用格式
+\newenvironment{jieshu}
+{\begin{center}\mdseries\large\em}
+{\end{center}}
+
